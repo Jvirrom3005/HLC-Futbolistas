@@ -1,0 +1,24 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>detalle</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">detalle</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <p>ID seleccionado: {{ id }}</p>
+  <ion-item>
+    <ion-label>Nombre</ion-label>
+    <ion-input [(ngModel)]="document.data.nombre"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label>Equipo</ion-label>
+    <ion-input [(ngModel)]="document.data.equipo"></ion-input>
+  </ion-item>
+  <ion-button (click)="guardarFutbolista()">{{ isNew ? 'Guardar' : 'Modificar' }}</ion-button>
+  <ion-button *ngIf="!isNew" (click)="confirmarBorrado()">Borrar</ion-button>
+</ion-content>
