@@ -4,14 +4,14 @@
 
 export const environment = {
   production: false,
-  firebaseConfig : {
-    apiKey: "AIzaSyBQ95e2NlgfKTDF8fYVjCFIcZkji_WCNNY",
-    authDomain: "futbolistas-36170.firebaseapp.com",
-    projectId: "futbolistas-36170",
-    storageBucket: "futbolistas-36170.firebasestorage.app",
-    messagingSenderId: "822744018267",
-    appId: "1:822744018267:web:058cab00a42d425d883e7e",
-    measurementId: "G-EH7VEM159C"
+  firebaseConfig: {
+    apiKey: "AIzaSyD-XegLWrIdZJWTC81wnjHB5nQkUkhIxCU",
+    authDomain: "ejemplo-tareas-b68dd.firebaseapp.com",
+    projectId: "ejemplo-tareas-b68dd",
+    storageBucket: "ejemplo-tareas-b68dd.appspot.com",
+    messagingSenderId: "962643459473",
+    appId: "1:962643459473:web:e0767bbeb3926c253d2e30",
+    measurementId: "G-14DZEKLYJK"
   }
 };
 

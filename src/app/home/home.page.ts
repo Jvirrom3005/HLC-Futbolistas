@@ -23,7 +23,7 @@ export class HomePage {
   }
 
   clicBotonInsertar() {
-    this.firestoreService.insertar('futbolistas', this.futbolistaEditando)
+    this.firestoreService.insertar(this.futbolistaEditando)
       .then(() => {
         console.log('futbolista creada correctamente');
         //Limpiando el contenido de futbolistaEditando
@@ -34,7 +34,7 @@ export class HomePage {
   }
 
   obneterListaFutbolistas() {
-    this.firestoreService.consultar('futbolistas').subscribe((resultadoConsultaFutbolistas) => {
+    this.firestoreService.consultar().subscribe((resultadoConsultaFutbolistas) => {
       this.arrayColeccionFutbolistas = [];
       resultadoConsultaFutbolistas.forEach((datosFutbolista: any) => {
         this.arrayColeccionFutbolistas.push({
