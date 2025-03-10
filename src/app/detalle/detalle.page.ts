@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FirestoreService } from '../firestore.service';
 import { Futbolista } from '../futbolista';
-import { AlertController, LoadingController, ToastController } from '@ionic/angular';
+import { AlertController, LoadingController, ToastController, NavController } from '@ionic/angular';
 import { ImagePicker } from '@awesome-cordova-plugins/image-picker/ngx';
 
 @Component({
@@ -23,7 +23,8 @@ export class DetallePage implements OnInit {
     private alertController: AlertController,
     private loadingController: LoadingController,
     private toastController: ToastController,
-    private imagePicker: ImagePicker
+    private imagePicker: ImagePicker,
+    private navController: NavController
   ) { }
 
   ngOnInit() {
@@ -32,7 +33,7 @@ export class DetallePage implements OnInit {
     if (!this.isNew) {
       this.consultarFutbolista();
     } else {
-      this.document = { id: '', data: {} as Futbolista };
+      this.document = { id: '', data: { nombre: '', equipo: '' } as Futbolista };
     }
   }
 
@@ -46,6 +47,19 @@ export class DetallePage implements OnInit {
   }
 
   guardarFutbolista() {
+    if (this.imagenSelec) {
+      this.subirImagen().then((downloadURL) => {
+        this.document.data.imagenUrl = downloadURL;
+        this.saveFutbolistaData();
+      }).catch(error => {
+        console.error('Error al subir la imagen: ', error);
+      });
+    } else {
+      this.saveFutbolistaData();
+    }
+  }
+
+  saveFutbolistaData() {
     if (this.isNew) {
       this.firestoreService.insertar(this.document.data).then(() => {
         console.log('Futbolista creado correctamente');
@@ -121,7 +135,8 @@ export class DetallePage implements OnInit {
       console.log(err);
     });
   }
-  async subirImagen() {
+
+  async subirImagen(): Promise<string> {
     //Mensaje de espera mientras se sube la imagen
     const loading = await this.loadingController.create({
       message: 'Subiendo imagen...',
@@ -134,32 +149,34 @@ export class DetallePage implements OnInit {
     });
 
     //Carpeta del storage donde se subirá la imagen
-    let carpeta = "cantantes";
+    let carpeta = "futbolistas";
 
     //Mostrar el mensaje de espera
-    loading.present();
+    await loading.present();
 
     //Asignar el nombre de la imagen en funcion de la hora actual para
     //evitar duplicidades
     let nombreImagen = `${new Date().getTime()}`;
 
     //Llamar al método que sube la imagen
-    this.firestoreService.subirImagenBase64(carpeta, nombreImagen, this.imagenSelec).then(snapshot => {
-      snapshot.ref.getDownloadURL().then(downloadURL => {
+    return this.firestoreService.subirImagenBase64(carpeta, nombreImagen, this.imagenSelec).then(snapshot => {
+      return snapshot.ref.getDownloadURL().then(downloadURL => {
         //EN LA VARIABLE downloadURL se obtiene la dirección de descarga de la imagen
         console.log("downloadURL:" + downloadURL);
-        // this.cantante.imagen = downloadURL;
         //Mostrar el mensaje de finalización
         toast.present();
         //Ocultar el mensaje de espera
         loading.dismiss();
+        return downloadURL;
       }).catch(error => {
         console.error('Error al obtener la URL de descarga: ', error);
         loading.dismiss();
+        throw error;
       });
     }).catch(error => {
       console.error('Error al subir la imagen: ', error);
       loading.dismiss();
+      throw error;
     });
   }
 
@@ -175,6 +192,10 @@ export class DetallePage implements OnInit {
       console.log(err);
     }
   );
+  }
+
+  volver() {
+    this.navController.back();
   }
 
 }
